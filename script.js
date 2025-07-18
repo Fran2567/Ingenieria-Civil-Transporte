@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const courses = document.querySelectorAll('.course');
-    const approvedCourses = new Set(); // Para llevar un registro de las asignaturas aprobadas
+    const approvedCourses = new Set();
+    const resetButton = document.getElementById('resetButton'); // Obtener el botón de reinicio
 
     // Función para guardar el estado en localStorage
     const saveState = () => {
@@ -17,14 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (courseElement) {
                     approvedCourses.add(courseId);
                     courseElement.classList.add('approved');
-                    courseElement.classList.remove('locked'); // Asegurarse de que no esté bloqueado si ya está aprobado
+                    courseElement.classList.remove('locked');
                 }
             });
-            updateCourseStates(); // Volver a verificar todas las dependencias al cargar
+            updateCourseStates();
         } else {
             // Si no hay estado guardado, inicializar los cursos bloqueados
             courses.forEach(course => {
-                if (!course.classList.contains('approved') && course.dataset.dependencies) {
+                // Verificar si la asignatura tiene dependencias o si no es de primer semestre
+                const isFirstSemesterCourse = course.closest('.semester-group').querySelector('h2').textContent.includes('Primer Semestre');
+                if (!course.classList.contains('approved') && (course.dataset.dependencies || !isFirstSemesterCourse)) {
                     course.classList.add('locked');
                 }
             });
@@ -38,21 +41,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const courseId = course.id;
             const dependencies = course.dataset.dependencies ? course.dataset.dependencies.split(',') : [];
 
-            // Si el curso ya está aprobado, no hacer nada más que asegurar la clase
             if (approvedCourses.has(courseId)) {
                 course.classList.add('approved');
                 course.classList.remove('locked');
-                return;
+                return; // Si ya está aprobado, no necesitamos verificar dependencias para bloquearlo
             }
 
-            // Verificar si todas las dependencias están aprobadas
             const allDependenciesMet = dependencies.every(dep => approvedCourses.has(dep.trim()));
 
-            if (allDependenciesMet) {
-                course.classList.remove('locked'); // Desbloquear si las dependencias se cumplen
-            } else {
-                if (!approvedCourses.has(courseId)) { // Si no está aprobado, bloquearlo
-                    course.classList.add('locked');
+            // Solo si no está aprobado
+            if (!approvedCourses.has(courseId)) {
+                if (dependencies.length === 0) { // Asignaturas sin dependencias (primer semestre)
+                    course.classList.remove('locked');
+                } else if (allDependenciesMet) {
+                    course.classList.remove('locked'); // Desbloquear si las dependencias se cumplen
+                } else {
+                    course.classList.add('locked'); // Bloquear si las dependencias no se cumplen
                 }
             }
         });
@@ -64,38 +68,74 @@ document.addEventListener('DOMContentLoaded', () => {
             const clickedCourse = event.target;
             const courseId = clickedCourse.id;
 
-            // Solo permitir clic si no está bloqueado y no ha sido aprobado
             if (!clickedCourse.classList.contains('locked') && !clickedCourse.classList.contains('approved')) {
                 clickedCourse.classList.add('approved');
-                approvedCourses.add(courseId); // Añadir a la lista de aprobados
-                saveState(); // Guardar el estado
-                updateCourseStates(); // Actualizar el estado de todas las asignaturas
-
-                // Desbloquear las asignaturas indicadas en data-unlocks
-                const unlocks = clickedCourse.dataset.unlocks ? clickedCourse.dataset.unlocks.split(',') : [];
-                unlocks.forEach(unlockId => {
-                    const unlockCourse = document.getElementById(unlockId.trim());
-                    if (unlockCourse && unlockCourse.classList.contains('locked')) {
-                        // Antes de desbloquear, verificar si sus propias dependencias ya se cumplen
-                        const unlockDependencies = unlockCourse.dataset.dependencies ? unlockCourse.dataset.dependencies.split(',') : [];
-                        const canUnlock = unlockDependencies.every(dep => approvedCourses.has(dep.trim()));
-                        if (canUnlock) {
-                            unlockCourse.classList.remove('locked');
-                        }
-                    }
-                });
-
+                approvedCourses.add(courseId);
+                saveState();
+                updateCourseStates(); // Recalcular todas las dependencias
             } else if (clickedCourse.classList.contains('approved')) {
-                // Opcional: Permitir "desaprobar" una asignatura (con cuidado por las dependencias)
-                const confirmUndo = confirm(`¿Estás seguro de que quieres desaprobar "${clickedCourse.textContent}"? Esto podría bloquear otras asignaturas.`);
+                const confirmUndo = confirm(`¿Estás seguro de que quieres desaprobar "${clickedCourse.textContent}"? Esto podría bloquear otras asignaturas que dependen de ella.`);
                 if (confirmUndo) {
-                    clickedCourse.classList.remove('approved');
-                    approvedCourses.delete(courseId); // Eliminar de la lista de aprobados
-                    saveState(); // Guardar el estado
-                    updateCourseStates(); // Recalcular todo
+                    // Verificar si alguna asignatura aprobada actualmente depende de esta
+                    let canRemove = true;
+                    const dependenciesToRemove = [courseId]; // Asignaturas a desaprobar, incluyendo la actual
+                    
+                    // Función recursiva para encontrar todas las dependencias que se verían afectadas
+                    const findDependentCourses = (currentCourseId) => {
+                        courses.forEach(c => {
+                            const deps = c.dataset.dependencies ? c.dataset.dependencies.split(',').map(d => d.trim()) : [];
+                            if (deps.includes(currentCourseId) && approvedCourses.has(c.id) && !dependenciesToRemove.includes(c.id)) {
+                                dependenciesToRemove.push(c.id);
+                                findDependentCourses(c.id); // Llamada recursiva
+                            }
+                        });
+                    };
+                    findDependentCourses(courseId);
+
+                    if (dependenciesToRemove.length > 1) {
+                         const confirmAffected = confirm(`Desaprobar "${clickedCourse.textContent}" también desaprobará las siguientes asignaturas (porque dependen de ella): ${dependenciesToRemove.filter(id => id !== courseId).map(id => document.getElementById(id).textContent).join(', ')}. ¿Continuar?`);
+                         if (!confirmAffected) {
+                             canRemove = false;
+                         }
+                    }
+
+                    if (canRemove) {
+                        dependenciesToRemove.forEach(id => {
+                            const el = document.getElementById(id);
+                            if (el) {
+                                el.classList.remove('approved');
+                                approvedCourses.delete(id);
+                            }
+                        });
+                        saveState();
+                        updateCourseStates(); // Recalcular todo
+                    }
                 }
             }
         });
+    });
+
+    // Manejador de clics para el botón de reinicio
+    resetButton.addEventListener('click', () => {
+        const confirmReset = confirm('¿Estás seguro de que quieres reiniciar todo el progreso de la malla? ¡Esta acción no se puede deshacer!');
+        if (confirmReset) {
+            localStorage.removeItem('approvedCourses'); // Borrar todo del almacenamiento local
+            approvedCourses.clear(); // Limpiar el Set de asignaturas aprobadas
+            
+            // Restablecer todas las clases de las asignaturas
+            courses.forEach(course => {
+                course.classList.remove('approved');
+                // Re-aplicar 'locked' a las asignaturas que dependen de otras o no son de primer semestre
+                const isFirstSemesterCourse = course.closest('.semester-group').querySelector('h2').textContent.includes('Primer Semestre');
+                if (course.dataset.dependencies || !isFirstSemesterCourse) {
+                    course.classList.add('locked');
+                } else {
+                    course.classList.remove('locked'); // Asegurar que las de primer semestre estén desbloqueadas
+                }
+            });
+            updateCourseStates(); // Volver a verificar los estados
+            alert('¡Malla Curricular Reiniciada!');
+        }
     });
 
     // Cargar el estado inicial al cargar la página
