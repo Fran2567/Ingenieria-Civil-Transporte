@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malla Curricular Interactiva</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Malla Curricular: Ingeniería Civil en Transporte</h1>
+
+        <div class="semester-group">
+            <h2>Primer Semestre</h2>
+            <ul class="semester" id="semester1">
+                <li class="course" id="comunicacion_ingenieria" data-unlocks="">DESARROLLO INTEGRAL Y COMUNICACIÓN PARA INGENIERÍA</li>
+                <li class="course" id="intro_fisica" data-unlocks="fisica_ingenieria">INTRODUCCIÓN A LA FÍSICA</li>
+                <li class="course" id="intro_ing_transporte" data-unlocks="dibujo_ingenieria,fundamentos_quimica">INTRODUCCIÓN A LA INGENIERÍA CIVIL EN TRANSPORTE</li>
+                <li class="course" id="fundamentos_matematicas" data-unlocks="calculo_diferencial,algebra_lineal">FUNDAMENTOS DE MATEMÁTICAS PARA INGENIERÍA</li>
+            </ul>
+        </div>
+
+        <div class="semester-group">
+            <h2>Segundo Semestre</h2>
+            <ul class="semester" id="semester2">
+                <li class="course locked" id="fisica_ingenieria" data-dependencies="intro_fisica" data-unlocks="fisica_general_termoyondas">FÍSICA PARA INGENIERÍA</li>
+                <li class="course locked" id="dibujo_ingenieria" data-dependencies="intro_ing_transporte" data-unlocks="bim,geomesura">DIBUJO DE INGENIERÍA 1</li>
+                <li class="course locked" id="fundamentos_quimica" data-dependencies="intro_ing_transporte" data-unlocks="ciencia_materiales">FUNDAMENTOS DE QUÍMICA</li>
+                <li class="course locked" id="calculo_diferencial" data-dependencies="fundamentos_matematicas" data-unlocks="calculo_varias_variables,fisica_general_termoyondas">CÁLCULO DIFERENCIAL E INTEGRAL</li>
+                <li class="course locked" id="algebra_lineal" data-dependencies="fundamentos_matematicas" data-unlocks="">ÁLGEBRA LINEAL</li>
+            </ul>
+        </div>
+
+        <div class="semester-group">
+            <h2>Tercer Semestre</h2>
+            <ul class="semester" id="semester3">
+                <li class="course locked" id="fisica_general_termoyondas" data-dependencies="fisica_ingenieria,calculo_diferencial" data-unlocks="fisica_general_electromagnetismo">FÍSICA GENERAL TERMODINÁMICA Y ONDAS</li>
+                <li class="course locked" id="ciencia_materiales" data-dependencies="fundamentos_quimica" data-unlocks="mecanica_solidos,diseno_innovacion_emprendimiento,geotecnia1">CIENCIA DE LOS MATERIALES</li>
+                <li class="course locked" id="bim" data-dependencies="dibujo_ingenieria" data-unlocks="">BIM</li>
+                <li class="course locked" id="geomesura" data-dependencies="dibujo_ingenieria" data-unlocks="">GEOMESURA</li>
+                <li class="course" id="ingles1" data-unlocks="ingles2">INGLÉS 1</li>
+                <li class="course locked" id="calculo_varias_variables" data-dependencies="calculo_diferencial" data-unlocks="estadistica_probabilidades,ecuaciones_diferenciales,programacion_metodos_numericos">CÁLCULO EN VARIAS VARIABLES</li>
+            </ul>
+        </div>
+
+        <div class="semester-group">
+            <h2>Cuarto Semestre</h2>
+            <ul class="semester" id="semester4">
+                <li class="course locked" id="fisica_general_electromagnetismo" data-dependencies="fisica_general_termoyondas" data-unlocks="">FÍSICA GENERAL ELECTROMAGNETISMO</li>
+                <li class="course locked" id="mecanica_solidos" data-dependencies="ciencia_materiales" data-unlocks="">MECÁNICA DE SÓLIDOS</li>
+                <li class="course locked" id="estadistica_probabilidades" data-dependencies="calculo_varias_variables" data-unlocks="ingenieria_logistica,analisis_sistemas_transporte">ESTADÍSTICA Y PROBABILIDADES</li>
+                <li class="course locked" id="ingles2" data-dependencies="ingles1" data-unlocks="ingles3">INGLÉS 2</li>
+                <li class="course locked" id="ecuaciones_diferenciales" data-dependencies="calculo_varias_variables" data-unlocks="">ECUACIONES DIFERENCIALES</li>
+            </ul>
+        </div>
+
+        <div class="semester-group">
+            <h2>Quinto Semestre</h2>
+            <ul class="semester" id="semester5">
+                <li class="course locked" id="programacion_metodos_numericos" data-dependencies="calculo_varias_variables" data-unlocks="investigacion_operaciones">PROGRAMACIÓN Y MÉTODOS NUMÉRICOS</li>
+                <li class="course locked" id="diseno_innovacion_emprendimiento" data-dependencies="ciencia_materiales" data-unlocks="taller_innovacion_transporte,ingenieria_economica,sistema_integrado_gestion">DISEÑO, INNOVACIÓN Y EMPRENDIMIENTO</li>
+                <li class="course locked" id="analisis_sistemas_transporte" data-dependencies="estadistica_probabilidades" data-unlocks="economia_transporte,teoria_flujos_transporte">ANÁLISIS DE SISTEMAS DE TRANSPORTE</li>
+                <li class="course locked" id="ingenieria_logistica" data-dependencies="estadistica_probabilidades" data-unlocks="logistica_abastecimiento">INGENIERÍA LOGÍSTICA</li>
+                <li class="course locked" id="ingles3" data-dependencies="ingles2" data-unlocks="ingles4">INGLÉS 3</li>
+            </ul>
+        </div>
+
+        <div class="semester-group">
+            <h2>Sexto Semestre</h2>
+            <ul class="semester" id="semester6">
+                <li class="course locked" id="taller_innovacion_transporte" data-dependencies="diseno_innovacion_emprendimiento" data-unlocks="taller_transporte_capstone">TALLER DE INNOVACIÓN Y TECNOLOGÍAS EN LOS MEDIOS DE TRANSPORTE</li>
+                <li class="course locked" id="logistica_abastecimiento" data-dependencies="ingenieria_logistica" data-unlocks="logistica_almacenamiento">LOGÍSTICA DEL ABASTECIMIENTO</li>
+                <li class="course locked" id="economia_transporte" data-dependencies="analisis_sistemas_transporte" data-unlocks="demanda_transporte,logistica_distribucion,simulacion_modelos_transporte">ECONOMÍA DE TRANSPORTE</li>
+                <li class="course locked" id="investigacion_operaciones" data-dependencies="programacion_metodos_numericos" data-unlocks="">INVESTIGACIÓN DE OPERACIONES</li>
+                <li class="course locked" id="ingles4" data-dependencies="ingles3" data-unlocks="">INGLÉS 4</li>
+            </ul>
+        </div>
+
+        <div class="semester-group">
+            <h2>Séptimo Semestre</h2>
+            <ul class="semester" id="semester7">
+                <li class="course locked" id="geotecnia1" data-dependencies="ciencia_materiales" data-unlocks="obras_lineales">GEOTECNIA 1</li>
+                <li class="course locked" id="ingenieria_economica" data-dependencies="diseno_innovacion_emprendimiento" data-unlocks="finanzas">INGENIERÍA ECONÓMICA</li>
+                <li class="course locked" id="sistema_integrado_gestion" data-dependencies="diseno_innovacion_emprendimiento" data-unlocks="diseno_planificacion_proyectos">SISTEMA INTEGRADO DE GESTIÓN</li>
+                <li class="course locked" id="logistica_almacenamiento" data-dependencies="logistica_abastecimiento" data-unlocks="transporte_logistica_sustentable,logistica_distribucion,simulacion_modelos_transporte">LOGÍSTICA DEL ALMACENAMIENTO</li>
+                <li class="course locked" id="demanda_transporte" data-dependencies="economia_transporte" data-unlocks="taller_transporte_capstone,ciencia_datos_transporte">DEMANDA DE TRANSPORTE</li>
+                <li class="course locked" id="teoria_flujos_transporte" data-dependencies="analisis_sistemas_transporte" data-unlocks="transporte_logistica_sustentable,ingenieria_transito">TEORÍA DE FLUJOS DE TRANSPORTE</li>
+            </ul>
+        </div>
+
+        <div class="semester-group">
+            <h2>Octavo Semestre</h2>
+            <ul class="semester" id="semester8">
+                <li class="course locked" id="transporte_logistica_sustentable" data-dependencies="logistica_almacenamiento,teoria_flujos_transporte" data-unlocks="gis_movilidad_territorio">TRANSPORTE Y LOGÍSTICA SUSTENTABLE</li>
+                <li class="course locked" id="obras_lineales" data-dependencies="geotecnia1" data-unlocks="ingenieria_transito,project_management1,transporte_carretero_ferroviario,transporte_aereo">OBRAS LINEALES</li>
+                <li class="course locked" id="logistica_distribucion" data-dependencies="economia_transporte,logistica_almacenamiento" data-unlocks="ingenieria_transito,transporte_aereo">LOGÍSTICA DE DISTRIBUCIÓN</li>
+                <li class="course locked" id="simulacion_modelos_transporte" data-dependencies="economia_transporte,logistica_almacenamiento" data-unlocks="herramientas_simulacion_urbano">SIMULACIÓN Y MODELOS APLICADOS A SISTEMAS DE TRANSPORTE</li>
+                <li class="course locked" id="taller_transporte_capstone" data-dependencies="taller_innovacion_transporte,demanda_transporte" data-unlocks="">TALLER DE TRANSPORTE Y LOGÍSTICA (CAPSTONE)</li>
+                <li class="course locked" id="ingenieria_transito" data-dependencies="teoria_flujos_transporte,obras_lineales,logistica_distribucion" data-unlocks="transporte_carretero_ferroviario,herramientas_simulacion_urbano">INGENIERÍA DE TRÁNSITO</li>
+            </ul>
+        </div>
+
+        <div class="semester-group">
+            <h2>Noveno Semestre</h2>
+            <ul class="semester" id="semester9">
+                <li class="course" id="transporte_maritimo_portuaria" data-unlocks="gestion_cadena_suministro">TRANSPORTE MARÍTIMO Y LOGÍSTICA PORTUARIA</li>
+                <li class="course locked" id="finanzas" data-dependencies="ingenieria_economica" data-unlocks="taller_evaluacion_proyectos">FINANZAS</li>
+                <li class="course locked" id="project_management1" data-dependencies="obras_lineales" data-unlocks="project_management2">PROJECT MANAGEMENT 1</li>
+                <li class="course locked" id="transporte_carretero_ferroviario" data-dependencies="obras_lineales,ingenieria_transito" data-unlocks="gestion_cadena_suministro">TRANSPORTE CARRETERO Y FERROVIARIO</li>
+                <li class="course locked" id="diseno_planificacion_proyectos" data-dependencies="sistema_integrado_gestion" data-unlocks="ciencia_datos_transporte,taller_evaluacion_proyectos,gis_movilidad_territorio">DISEÑO Y PLANIFICACIÓN DE PROYECTOS EN TRANSPORTE</li>
+                <li class="course locked" id="transporte_aereo" data-dependencies="obras_lineales,logistica_distribucion" data-unlocks="gestion_cadena_suministro">TRANSPORTE AÉREO DE PASAJEROS Y CARGA</li>
+            </ul>
+        </div>
+
+        <div class="semester-group">
+            <h2>Décimo Semestre</h2>
+            <ul class="semester" id="semester10">
+                <li class="course locked" id="ciencia_datos_transporte" data-dependencies="demanda_transporte,diseno_planificacion_proyectos" data-unlocks="">CIENCIA DE DATOS PARA TRANSPORTE</li>
+                <li class="course locked" id="project_management2" data-dependencies="project_management1" data-unlocks="">PROJECT MANAGEMENT 2</li>
+                <li class="course locked" id="herramientas_simulacion_urbano" data-dependencies="simulacion_modelos_transporte,ingenieria_transito" data-unlocks="">HERRAMIENTAS DE SIMULACIÓN EN TRANSPORTE URBANO</li>
+                <li class="course locked" id="gestion_cadena_suministro" data-dependencies="transporte_maritimo_portuaria,transporte_carretero_ferroviario,transporte_aereo" data-unlocks="">GESTIÓN DE LA CADENA DE SUMINISTRO</li>
+                <li class="course locked" id="taller_evaluacion_proyectos" data-dependencies="finanzas,diseno_planificacion_proyectos" data-unlocks="proyecto_titulo">TALLER DE EVALUACIÓN DE PROYECTOS DE TRANSPORTE</li>
+                <li class="course locked" id="gis_movilidad_territorio" data-dependencies="transporte_logistica_sustentable,diseno_planificacion_proyectos" data-unlocks="">GIS. MOVILIDAD Y TERRITORIO</li>
+            </ul>
+        </div>
+
+        <div class="semester-group">
+            <h2>Undécimo Semestre</h2>
+            <ul class="semester" id="semester11">
+                <li class="course locked" id="proyecto_titulo" data-dependencies="taller_evaluacion_proyectos" data-unlocks="">PROYECTO DE TÍTULO EN TRANSPORTE</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
